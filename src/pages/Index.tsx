@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -98,6 +99,7 @@ const MOCK_MODS = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -123,7 +125,7 @@ const Index = () => {
 
           <nav className="hidden md:flex items-center gap-6">
             <a href="/" className="story-link text-sm font-medium">Главная</a>
-            <a href="/" className="story-link text-sm font-medium">Каталог</a>
+            <a href="/catalog" className="story-link text-sm font-medium">Каталог</a>
             <a href="/community" className="story-link text-sm font-medium">Сообщество</a>
             <a href="/discussions" className="story-link text-sm font-medium">Обсуждения</a>
           </nav>
@@ -254,7 +256,7 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredMods.map((mod, index) => (
-              <Card key={mod.id} className="hover-scale animate-scale-in overflow-hidden" style={{ animationDelay: `${index * 50}ms` }}>
+              <Card key={mod.id} className="hover-scale animate-scale-in overflow-hidden cursor-pointer" style={{ animationDelay: `${index * 50}ms` }} onClick={() => navigate(`/mod/${mod.id}`)}>
                 <div className="relative h-48 overflow-hidden">
                   <img 
                     src={mod.image} 
