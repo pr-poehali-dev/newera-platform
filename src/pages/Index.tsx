@@ -122,10 +122,10 @@ const Index = () => {
           </div>
 
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#" className="story-link text-sm font-medium">Главная</a>
-            <a href="#" className="story-link text-sm font-medium">Каталог</a>
-            <a href="#" className="story-link text-sm font-medium">Сообщество</a>
-            <a href="#" className="story-link text-sm font-medium">Обсуждения</a>
+            <a href="/" className="story-link text-sm font-medium">Главная</a>
+            <a href="/" className="story-link text-sm font-medium">Каталог</a>
+            <a href="/community" className="story-link text-sm font-medium">Сообщество</a>
+            <a href="/discussions" className="story-link text-sm font-medium">Обсуждения</a>
           </nav>
 
           <div className="flex items-center gap-3">
