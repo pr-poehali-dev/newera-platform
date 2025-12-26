@@ -1,0 +1,25 @@
+{
+  "tests": [
+    {
+      "name": "Get all mods",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "mods": "array",
+        "total": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get free mods",
+      "method": "GET",
+      "path": "/?price=free",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "mods": "array"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
