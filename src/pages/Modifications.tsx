@@ -2,11 +2,19 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 import { useAuth } from '@/hooks/useAuth';
 import { playHoverSound, playClickSound } from '@/utils/sounds';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import TelegramAuth from '@/components/TelegramAuth';
 
 const MODS = [
   {
@@ -81,9 +89,10 @@ const CATEGORIES = ["Все", "Скрипты", "Графика", "Оружие"
 
 const Modifications = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
 
   const filteredMods = MODS.filter(mod => {
     const matchesSearch = mod.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -93,74 +102,133 @@ const Modifications = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background/95 backdrop-blur-xl">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary via-purple-500 to-primary flex items-center justify-center pulse-glow">
-              <Icon name="Zap" size={20} className="text-white" />
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a0a0f]/80 border-b border-white/5">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-12">
+            <div 
+              className="flex items-center gap-3 cursor-pointer group" 
+              onClick={() => navigate('/')}
+              onMouseEnter={playHoverSound}
+            >
+              <svg width="32" height="32" viewBox="0 0 200 200" fill="none" className="group-hover:scale-110 transition-transform">
+                <path d="M50 60L90 40L90 100L50 120V60Z" fill="url(#grad1)" opacity="0.9"/>
+                <path d="M90 40L130 60V120L90 100V40Z" fill="url(#grad2)" opacity="0.8"/>
+                <defs>
+                  <linearGradient id="grad1" x1="50" y1="40" x2="90" y2="120">
+                    <stop stopColor="#4d4dff"/>
+                    <stop offset="1" stopColor="#6b6bff"/>
+                  </linearGradient>
+                  <linearGradient id="grad2" x1="90" y1="40" x2="130" y2="120">
+                    <stop stopColor="#5a5aff"/>
+                    <stop offset="1" stopColor="#7878ff"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span className="text-xl font-bold tracking-tight text-white">NewEra</span>
             </div>
-            <h1 className="text-2xl font-bold tracking-tight">NewEra</h1>
+
+            <nav className="hidden md:flex items-center gap-8">
+              <a 
+                href="/collections" 
+                className="text-sm text-muted-foreground hover:text-white transition-colors"
+                onMouseEnter={playHoverSound}
+                onClick={playClickSound}
+              >
+                Сборки
+              </a>
+              <span className="text-muted-foreground/30">/</span>
+              <a 
+                href="/modifications" 
+                className="text-sm text-white transition-colors"
+                onMouseEnter={playHoverSound}
+                onClick={playClickSound}
+              >
+                Модификации
+              </a>
+              <span className="text-muted-foreground/30">/</span>
+              <a 
+                href="/fixes" 
+                className="text-sm text-muted-foreground hover:text-white transition-colors"
+                onMouseEnter={playHoverSound}
+                onClick={playClickSound}
+              >
+                Фиксы
+              </a>
+            </nav>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="/collections" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
-              Сборки
-            </a>
-            <a href="/modifications" className="text-sm font-medium text-foreground transition-colors" onMouseEnter={playHoverSound}>
-              Модификации
-            </a>
-            <a href="/fixes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
-              Фиксы
-            </a>
-          </nav>
-
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             {isAuthenticated && user ? (
               <Button
-                variant="outline"
+                variant="ghost"
                 onClick={() => {
                   playClickSound();
-                  navigate('/profile');
+                  logout();
                 }}
                 onMouseEnter={playHoverSound}
-                className="gap-2"
+                className="text-muted-foreground hover:text-white"
               >
-                {user.avatar && <img src={user.avatar} alt={user.username} className="w-6 h-6 rounded-full" />}
-                {user.firstName || user.username}
+                Выйти
               </Button>
             ) : (
-              <Button
-                onClick={() => {
-                  playClickSound();
-                  navigate('/');
-                }}
-                onMouseEnter={playHoverSound}
-                className="bg-primary hover:bg-primary/90"
-              >
-                Войти
-              </Button>
+              <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    className="bg-primary hover:bg-primary/90 text-white rounded-full"
+                    onMouseEnter={playHoverSound}
+                    onClick={playClickSound}
+                  >
+                    Войти
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="bg-card border-border bounce-in">
+                  <DialogHeader>
+                    <DialogTitle className="text-center text-2xl">Войти в NewEra</DialogTitle>
+                    <DialogDescription className="text-center">
+                      Авторизуйтесь через Telegram для доступа ко всем функциям
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-6 py-4">
+                    <div className="flex justify-center">
+                      <TelegramAuth
+                        botUsername="newera_auth_bot"
+                        onAuth={() => {
+                          setIsLoginOpen(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             )}
           </div>
         </div>
       </header>
 
-      <section className="py-16">
-        <div className="container">
-          <div className="max-w-3xl mx-auto text-center mb-12">
-            <h2 className="text-5xl font-bold mb-4 slide-in-bottom">Модификации</h2>
-            <p className="text-muted-foreground text-lg mb-6">
+      <main className="pt-24 pb-16">
+        <div className="container mx-auto px-6">
+          <div className="mb-12 text-center max-w-3xl mx-auto">
+            <h1 className="text-5xl font-bold mb-4 text-white slide-in-bottom">Модификации</h1>
+            <p className="text-muted-foreground text-lg mb-8">
               Индивидуальные моды для настройки вашей игры
             </p>
 
-            <div className="flex gap-4 mb-8">
+            <div className="flex gap-3 mb-6">
               <Input
                 placeholder="Поиск модификаций..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-1 bg-secondary border-border"
+                className="flex-1 bg-[#0f0f14] border-white/10 text-white placeholder:text-muted-foreground"
               />
-              <Button variant="secondary" onMouseEnter={playHoverSound} onClick={playClickSound}>
+              <Button 
+                variant="secondary" 
+                size="icon"
+                onMouseEnter={playHoverSound} 
+                onClick={playClickSound}
+                className="bg-[#0f0f14] hover:bg-[#15151a] border-white/10"
+              >
                 <Icon name="Search" size={20} />
               </Button>
             </div>
@@ -169,14 +237,16 @@ const Modifications = () => {
               {CATEGORIES.map((category) => (
                 <Button
                   key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
+                  variant="outline"
                   size="sm"
                   onClick={() => {
                     playClickSound();
                     setSelectedCategory(category);
                   }}
                   onMouseEnter={playHoverSound}
-                  className={selectedCategory === category ? "bg-primary" : ""}
+                  className={selectedCategory === category 
+                    ? "bg-primary text-white border-primary hover:bg-primary/90" 
+                    : "bg-transparent border-white/10 text-muted-foreground hover:text-white hover:border-white/20"}
                 >
                   {category}
                 </Button>
@@ -186,9 +256,9 @@ const Modifications = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
             {filteredMods.map((mod, index) => (
-              <Card
+              <div
                 key={mod.id}
-                className="group relative overflow-hidden bg-gradient-to-br from-card to-secondary border-border/50 hover:border-primary/50 transition-all duration-500 cursor-pointer slide-in-bottom hover:glow-effect"
+                className="group relative overflow-hidden bg-[#0f0f14] rounded-lg cursor-pointer transition-all duration-300 hover:scale-[1.02] slide-in-bottom"
                 style={{ animationDelay: `${index * 0.1}s` }}
                 onClick={() => {
                   playClickSound();
@@ -196,62 +266,54 @@ const Modifications = () => {
                 }}
                 onMouseEnter={playHoverSound}
               >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-purple-500/5 to-primary/10" />
+                <div className="relative aspect-video overflow-hidden">
+                  <img
+                    src={mod.image}
+                    alt={mod.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f14] via-[#0f0f14]/40 to-transparent" />
+                  
+                  <div className="absolute top-3 left-3 flex gap-2">
+                    {mod.isFree ? (
+                      <Badge className="bg-green-500/90 text-white border-0 text-xs">
+                        Бесплатно
+                      </Badge>
+                    ) : (
+                      <Badge className="bg-primary/90 text-white border-0 text-xs">
+                        ₽{mod.price}
+                      </Badge>
+                    )}
+                    <Badge className="bg-black/60 text-white border-0 text-xs backdrop-blur-sm">
+                      {mod.category}
+                    </Badge>
+                  </div>
                 </div>
-                <CardContent className="p-0 relative">
-                  <div className="relative h-56 overflow-hidden">
-                    <img
-                      src={mod.image}
-                      alt={mod.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                    <div className="absolute top-3 left-3 flex gap-2">
-                      {mod.isFree ? (
-                        <Badge className="bg-green-500/90 text-white border-0">
-                          Бесплатно
-                        </Badge>
-                      ) : (
-                        <Badge className="bg-primary/90 text-white border-0">
-                          ₽{mod.price}
-                        </Badge>
-                      )}
-                      <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-                        {mod.category}
-                      </Badge>
+
+                <div className="p-5">
+                  <h3 className="text-xl font-semibold mb-2 text-white group-hover:text-primary transition-colors">
+                    {mod.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {mod.description}
+                  </p>
+                  
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <Icon name="Download" size={14} />
+                      <span>{mod.downloads.toLocaleString()}</span>
                     </div>
-                    <div className="absolute bottom-3 left-3 flex gap-2">
-                      <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-                        <Icon name="Download" size={12} className="mr-1" />
-                        {mod.downloads}
-                      </Badge>
-                      <Badge variant="secondary" className="bg-background/80 backdrop-blur-sm">
-                        <Icon name="Star" size={12} className="mr-1" />
-                        {mod.rating}
-                      </Badge>
+                    <div className="flex items-center gap-1">
+                      <Icon name="Star" size={14} className="text-yellow-500" />
+                      <span>{mod.rating}</span>
                     </div>
                   </div>
-                  <div className="p-6 relative z-10">
-                    <h3 className="text-xl font-bold mb-2">{mod.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{mod.description}</p>
-                    <Button
-                      className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        playClickSound();
-                      }}
-                      onMouseEnter={playHoverSound}
-                    >
-                      {mod.isFree ? 'Скачать' : 'Купить'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             ))}
           </div>
         </div>
-      </section>
+      </main>
     </div>
   );
 };
