@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import Icon from '@/components/ui/icon';
 import {
   Dialog,
   DialogContent,
@@ -16,101 +13,106 @@ import TelegramAuth from '@/components/TelegramAuth';
 import { useAuth } from '@/hooks/useAuth';
 import { playHoverSound, playClickSound } from '@/utils/sounds';
 
-const MOCK_MODS = [
-  {
-    id: 1,
-    title: "Восстановить сборку",
-    description: "Восстановите свою приватную сборку GTA",
-    image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800",
-    buttonText: "СБОРКУ",
-  },
-  {
-    id: 2,
-    title: "Купить приватную сборку",
-    description: "Получите доступ к эксклюзивным модификациям",
-    image: "https://images.unsplash.com/photo-1587095951604-b9d924a3fda0?w=800",
-    buttonText: "ПРИВАТНУЮ",
-  },
-  {
-    id: 3,
-    title: "Настройки GTA Custom",
-    description: "Персонализируйте игру под себя",
-    image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800",
-    buttonText: "CUSTOM",
-  },
-  {
-    id: 4,
-    title: "Скачать лаунчер",
-    description: "Удобный менеджер модификаций",
-    image: "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?w=800",
-    buttonText: "ЛАУНЧЕР",
-  },
-];
-
-const SECTIONS = [
-  { id: 'info', label: 'О группе', icon: 'Info' },
-  { id: 'money', label: 'Донат', icon: 'DollarSign' },
-  { id: 'settings', label: 'Настройки', icon: 'Settings' },
-  { id: 'services', label: 'Услуги', icon: 'ShoppingBag' },
-];
-
 const Index = () => {
   const navigate = useNavigate();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background/80 backdrop-blur-xl">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary via-purple-500 to-primary flex items-center justify-center pulse-glow">
-              <Icon name="Zap" size={20} className="text-white" />
-            </div>
-            <h1 className="text-2xl font-bold tracking-tight">NewEra</h1>
+    <div className="min-h-screen bg-[#0a0a0f] flex flex-col">
+      {isAuthenticated && user && (
+        <div className="absolute top-6 right-6 z-50">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              playClickSound();
+              logout();
+            }}
+            onMouseEnter={playHoverSound}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Выйти
+          </Button>
+        </div>
+      )}
+
+      <div className="flex-1 flex flex-col items-center justify-center px-4">
+        <div className="max-w-4xl w-full text-center space-y-12">
+          <div className="flex items-center justify-center gap-6 mb-8">
+            <svg width="120" height="120" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" className="float-animation">
+              <path d="M50 60L90 40L90 100L50 120V60Z" fill="url(#gradient1)" opacity="0.9"/>
+              <path d="M90 40L130 60V120L90 100V40Z" fill="url(#gradient2)" opacity="0.8"/>
+              <path d="M50 120L90 100L130 120L90 140L50 120Z" fill="url(#gradient3)" opacity="0.7"/>
+              <path d="M90 100L130 120V160L90 140V100Z" fill="url(#gradient4)" opacity="0.85"/>
+              <path d="M50 120L90 140V160L50 140V120Z" fill="url(#gradient5)" opacity="0.75"/>
+              <defs>
+                <linearGradient id="gradient1" x1="50" y1="40" x2="90" y2="120" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#4d4dff"/>
+                  <stop offset="1" stopColor="#6b6bff"/>
+                </linearGradient>
+                <linearGradient id="gradient2" x1="90" y1="40" x2="130" y2="120" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#5a5aff"/>
+                  <stop offset="1" stopColor="#7878ff"/>
+                </linearGradient>
+                <linearGradient id="gradient3" x1="50" y1="100" x2="130" y2="140" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#3d3dff"/>
+                  <stop offset="1" stopColor="#5555ff"/>
+                </linearGradient>
+                <linearGradient id="gradient4" x1="90" y1="100" x2="130" y2="160" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#4747ff"/>
+                  <stop offset="1" stopColor="#6363ff"/>
+                </linearGradient>
+                <linearGradient id="gradient5" x1="50" y1="120" x2="90" y2="160" gradientUnits="userSpaceOnUse">
+                  <stop stopColor="#3838ff"/>
+                  <stop offset="1" stopColor="#5050ff"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <h1 className="text-8xl font-bold tracking-tight text-white slide-in-bottom">
+              NewEra
+            </h1>
           </div>
 
-          <nav className="hidden md:flex items-center gap-8">
-            <a href="/collections" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
+          <nav className="flex items-center justify-center gap-8 text-muted-foreground">
+            <a
+              href="/collections"
+              className="text-lg hover:text-white transition-colors duration-200"
+              onMouseEnter={playHoverSound}
+              onClick={playClickSound}
+            >
               Сборки
             </a>
-            <a href="/modifications" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
+            <span className="text-muted-foreground/30">/</span>
+            <a
+              href="/modifications"
+              className="text-lg hover:text-white transition-colors duration-200"
+              onMouseEnter={playHoverSound}
+              onClick={playClickSound}
+            >
               Модификации
             </a>
-            <a href="/fixes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
+            <span className="text-muted-foreground/30">/</span>
+            <a
+              href="/fixes"
+              className="text-lg hover:text-white transition-colors duration-200"
+              onMouseEnter={playHoverSound}
+              onClick={playClickSound}
+            >
               Фиксы
             </a>
           </nav>
 
-          <div className="flex items-center gap-3">
-            {isAuthenticated && user ? (
-              <div className="flex items-center gap-3 bounce-in">
-                <div className="flex items-center gap-2">
-                  {user.avatar && (
-                    <img src={user.avatar} alt={user.username} className="w-8 h-8 rounded-full" />
-                  )}
-                  <span className="text-sm font-medium">{user.firstName || user.username}</span>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  onClick={() => {
-                    playClickSound();
-                    logout();
-                  }}
-                  onMouseEnter={playHoverSound}
-                >
-                  Выйти
-                </Button>
-              </div>
-            ) : (
+          {!isAuthenticated && (
+            <div className="pt-8">
               <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
                 <DialogTrigger asChild>
-                  <Button 
-                    className="rounded-full px-6 bg-primary hover:bg-primary/90 glow-effect"
+                  <Button
+                    size="lg"
+                    className="bg-primary hover:bg-primary/90 text-white px-8 py-6 text-lg rounded-full"
                     onMouseEnter={playHoverSound}
                     onClick={playClickSound}
                   >
-                    New Era
+                    Войти
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="bg-card border-border bounce-in">
@@ -122,7 +124,7 @@ const Index = () => {
                   </DialogHeader>
                   <div className="space-y-6 py-4">
                     <div className="flex justify-center">
-                      <TelegramAuth 
+                      <TelegramAuth
                         botUsername="newera_auth_bot"
                         onAuth={() => {
                           setIsLoginOpen(false);
@@ -137,110 +139,10 @@ const Index = () => {
                   </div>
                 </DialogContent>
               </Dialog>
-            )}
-          </div>
-        </div>
-      </header>
-
-      <section className="relative py-12 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
-        <div className="container relative z-10">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary via-purple-600 to-primary flex items-center justify-center shadow-2xl shadow-primary/50 pulse-glow float-animation">
-                <Icon name="Zap" size={48} className="text-white" />
-              </div>
-              <h2 className="text-6xl md:text-8xl font-bold tracking-tight slide-in-bottom">
-                NewEra
-              </h2>
             </div>
-            <p className="text-lg text-muted-foreground">
-              Оформление группы <span className="text-primary font-semibold">ВКонтакте</span>
-            </p>
-          </div>
-
-          <div className="flex justify-center gap-4 mb-12 flex-wrap">
-            {SECTIONS.map((section, index) => (
-              <button
-                key={section.id}
-                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 hover:border-primary/50 transition-all duration-300 flex items-center justify-center group backdrop-blur-sm shimmer slide-in-bottom"
-                style={{ animationDelay: `${index * 0.1}s` }}
-                onMouseEnter={playHoverSound}
-                onClick={playClickSound}
-              >
-                <Icon name={section.icon as any} size={24} className="text-primary group-hover:scale-110 transition-transform" />
-              </button>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {MOCK_MODS.map((mod, index) => (
-              <Card
-                key={mod.id}
-                className="group relative overflow-hidden bg-gradient-to-br from-card via-card to-secondary border-border/50 hover:border-primary/50 transition-all duration-500 cursor-pointer slide-in-bottom shimmer hover:glow-effect"
-                style={{ animationDelay: `${index * 0.15}s` }}
-                onClick={() => {
-                  playClickSound();
-                  navigate('/catalog');
-                }}
-                onMouseEnter={playHoverSound}
-              >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-purple-500/5 to-primary/10" />
-                </div>
-                <CardContent className="p-0 relative">
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={mod.image}
-                      alt={mod.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-                    <div className="absolute top-3 left-3">
-                      <Badge className="bg-background/80 backdrop-blur-sm text-foreground border-border">
-                        NewEra
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="p-6 relative z-10">
-                    <h3 className="text-xl font-bold mb-2">{mod.title}</h3>
-                    <p className="text-sm text-muted-foreground mb-4">{mod.description}</p>
-                    <Button 
-                      className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 rounded-xl font-semibold glow-effect"
-                      onMouseEnter={playHoverSound}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        playClickSound();
-                      }}
-                    >
-                      {mod.buttonText}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          )}
         </div>
-      </section>
-
-      <footer className="border-t border-border/50 py-8 mt-16 bg-gradient-to-b from-background to-card">
-        <div className="container">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center pulse-glow">
-                <Icon name="User" size={20} className="text-white" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold">Петрунников Родион</p>
-                <p className="text-xs text-muted-foreground">Администратор NewEra</p>
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2024 NewEra. Все права защищены
-            </p>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };
