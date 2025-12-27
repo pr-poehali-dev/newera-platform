@@ -4,8 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Icon from '@/components/ui/icon';
 import {
   Dialog,
@@ -20,122 +18,76 @@ import { Label } from '@/components/ui/label';
 const MOCK_MODS = [
   {
     id: 1,
-    title: "Los Santos Redux",
-    description: "Полная графическая модернизация GTA V с реалистичными текстурами",
-    price: 1499,
-    category: "Глобальные сборки",
-    game: "GTA V",
-    rating: 4.8,
-    downloads: 15240,
+    title: "Восстановить сборку",
+    description: "Восстановите свою приватную сборку GTA",
     image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800",
-    isPaid: true,
-    author: "ModMaster",
+    buttonText: "СБОРКУ",
   },
   {
     id: 2,
-    title: "Realistic Traffic Pack",
-    description: "Реалистичный трафик и улучшенное AI водителей",
-    price: 0,
-    category: "Скрипты",
-    game: "GTA V",
-    rating: 4.5,
-    downloads: 32100,
-    image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800",
-    isPaid: false,
-    author: "CityBuilder",
+    title: "Купить приватную сборку",
+    description: "Получите доступ к эксклюзивным модификациям",
+    image: "https://images.unsplash.com/photo-1587095951604-b9d924a3fda0?w=800",
+    buttonText: "ПРИВАТНУЮ",
   },
   {
     id: 3,
-    title: "Vice City Remastered",
-    description: "Обновленная Vice City с HD текстурами и новым освещением",
-    price: 999,
-    category: "Глобальные сборки",
-    game: "GTA Vice City",
-    rating: 4.9,
-    downloads: 8750,
-    image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800",
-    isPaid: true,
-    author: "RetroGamer",
+    title: "Настройки GTA Custom",
+    description: "Персонализируйте игру под себя",
+    image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800",
+    buttonText: "CUSTOM",
   },
   {
     id: 4,
-    title: "Super Cars Pack 2024",
-    description: "50+ новых суперкаров с реалистичной физикой",
-    price: 799,
-    category: "Транспорт",
-    game: "GTA V",
-    rating: 4.7,
-    downloads: 21400,
-    image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800",
-    isPaid: true,
-    author: "SpeedDemon",
+    title: "Скачать лаунчер",
+    description: "Удобный менеджер модификаций",
+    image: "https://images.unsplash.com/photo-1579547621113-e4bb2a19bdd6?w=800",
+    buttonText: "ЛАУНЧЕР",
   },
-  {
-    id: 5,
-    title: "Custom Skins Collection",
-    description: "Более 100 уникальных скинов персонажей",
-    price: 0,
-    category: "Скины",
-    game: "GTA San Andreas",
-    rating: 4.3,
-    downloads: 45200,
-    image: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=800",
-    isPaid: false,
-    author: "SkinMaster",
-  },
-  {
-    id: 6,
-    title: "Night Life Enhancement",
-    description: "Улучшенная ночная жизнь города с новыми клубами",
-    price: 599,
-    category: "Карты",
-    game: "GTA V",
-    rating: 4.6,
-    downloads: 12800,
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800",
-    isPaid: true,
-    author: "NightOwl",
-  },
+];
+
+const SECTIONS = [
+  { id: 'info', label: 'О группе', icon: 'Info' },
+  { id: 'money', label: 'Донат', icon: 'DollarSign' },
+  { id: 'settings', label: 'Настройки', icon: 'Settings' },
+  { id: 'services', label: 'Услуги', icon: 'ShoppingBag' },
 ];
 
 const Index = () => {
   const navigate = useNavigate();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-
-  const filteredMods = MOCK_MODS.filter(mod => {
-    const matchesSearch = mod.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         mod.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || 
-                           (selectedCategory === 'paid' && mod.isPaid) ||
-                           (selectedCategory === 'free' && !mod.isPaid);
-    return matchesSearch && matchesCategory;
-  });
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b border-border/20 bg-background/80 backdrop-blur-xl">
         <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Icon name="Zap" size={32} className="text-primary" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary via-purple-500 to-primary flex items-center justify-center">
+              <Icon name="Zap" size={20} className="text-white" />
+            </div>
             <h1 className="text-2xl font-bold tracking-tight">NewEra</h1>
           </div>
 
-          <nav className="hidden md:flex items-center gap-6">
-            <a href="/" className="story-link text-sm font-medium">Главная</a>
-            <a href="/catalog" className="story-link text-sm font-medium">Каталог</a>
-            <a href="/community" className="story-link text-sm font-medium">Сообщество</a>
-            <a href="/discussions" className="story-link text-sm font-medium">Обсуждения</a>
+          <nav className="hidden md:flex items-center gap-8">
+            <a href="#collections" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Сборки
+            </a>
+            <a href="#modifications" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Модификации
+            </a>
+            <a href="#fixes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              Фиксы
+            </a>
           </nav>
 
           <div className="flex items-center gap-3">
             <Dialog open={isLoginOpen} onOpenChange={setIsLoginOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost">Вход</Button>
+                <Button className="rounded-full px-6 bg-primary hover:bg-primary/90">
+                  New Era
+                </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="bg-card border-border">
                 <DialogHeader>
                   <DialogTitle>Войти в аккаунт</DialogTitle>
                   <DialogDescription>
@@ -145,56 +97,13 @@ const Index = () => {
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="your@email.com" />
+                    <Input id="email" type="email" placeholder="your@email.com" className="bg-secondary border-border" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="password">Пароль</Label>
-                    <Input id="password" type="password" placeholder="••••••••" />
+                    <Input id="password" type="password" placeholder="••••••••" className="bg-secondary border-border" />
                   </div>
-                  <Button className="w-full">Войти</Button>
-                  <div className="text-center text-sm text-muted-foreground">или</div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" className="w-full">
-                      <Icon name="MessageCircle" size={16} className="mr-2" />
-                      Telegram
-                    </Button>
-                    <Button variant="outline" className="w-full">
-                      <Icon name="Share2" size={16} className="mr-2" />
-                      VK
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-
-            <Dialog open={isRegisterOpen} onOpenChange={setIsRegisterOpen}>
-              <DialogTrigger asChild>
-                <Button>Регистрация</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Создать аккаунт</DialogTitle>
-                  <DialogDescription>
-                    Присоединяйтесь к NewEra — крупнейшему хабу модов для GTA
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-email">Email</Label>
-                    <Input id="reg-email" type="email" placeholder="your@email.com" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-password">Пароль</Label>
-                    <Input id="reg-password" type="password" placeholder="••••••••" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-confirm">Повторите пароль</Label>
-                    <Input id="reg-confirm" type="password" placeholder="••••••••" />
-                  </div>
-                  <Button className="w-full">Создать аккаунт</Button>
-                  <p className="text-xs text-center text-muted-foreground">
-                    На ваш email будет отправлено письмо для подтверждения
-                  </p>
+                  <Button className="w-full bg-primary hover:bg-primary/90">Войти</Button>
                 </div>
               </DialogContent>
             </Dialog>
@@ -202,165 +111,87 @@ const Index = () => {
         </div>
       </header>
 
-      <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-background to-accent/20" />
+      <section className="relative py-12 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
         <div className="container relative z-10">
-          <div className="max-w-3xl mx-auto text-center animate-fade-in">
-            <h2 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
-              Модификации нового поколения
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Крупнейший маркетплейс модов для Grand Theft Auto. Покупай, скачивай, делись опытом.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <Button size="lg" className="gap-2">
-                <Icon name="Download" size={20} />
-                Начать
-              </Button>
-              <Button size="lg" variant="outline" className="gap-2">
-                <Icon name="Play" size={20} />
-                Узнать больше
-              </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-12 border-t border-border">
-        <div className="container">
-          <div className="mb-8">
-            <div className="flex flex-col md:flex-row gap-4 mb-6">
-              <div className="flex-1 relative">
-                <Icon name="Search" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Поиск модификаций..."
-                  className="pl-10"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary via-purple-600 to-primary flex items-center justify-center shadow-2xl shadow-primary/50">
+                <Icon name="Zap" size={48} className="text-white" />
               </div>
-              <Button variant="outline" className="gap-2">
-                <Icon name="SlidersHorizontal" size={20} />
-                Фильтры
-              </Button>
+              <h2 className="text-6xl md:text-8xl font-bold tracking-tight">
+                NewEra
+              </h2>
             </div>
-
-            <Tabs defaultValue="all" onValueChange={setSelectedCategory}>
-              <TabsList>
-                <TabsTrigger value="all">Все</TabsTrigger>
-                <TabsTrigger value="paid">Платные</TabsTrigger>
-                <TabsTrigger value="free">Бесплатные</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <p className="text-lg text-muted-foreground">
+              Оформление группы <span className="text-primary font-semibold">ВКонтакте</span>
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMods.map((mod, index) => (
-              <Card key={mod.id} className="hover-scale animate-scale-in overflow-hidden cursor-pointer" style={{ animationDelay: `${index * 50}ms` }} onClick={() => navigate(`/mod/${mod.id}`)}>
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={mod.image} 
-                    alt={mod.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2 right-2 flex gap-2">
-                    {mod.isPaid ? (
-                      <Badge className="bg-accent text-accent-foreground">₽{mod.price}</Badge>
-                    ) : (
-                      <Badge variant="secondary">Бесплатно</Badge>
-                    )}
-                  </div>
+          <div className="flex justify-center gap-4 mb-12 flex-wrap">
+            {SECTIONS.map((section) => (
+              <button
+                key={section.id}
+                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border border-primary/30 hover:border-primary/50 transition-all duration-300 flex items-center justify-center group backdrop-blur-sm"
+              >
+                <Icon name={section.icon as any} size={24} className="text-primary group-hover:scale-110 transition-transform" />
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {MOCK_MODS.map((mod, index) => (
+              <Card
+                key={mod.id}
+                className="group relative overflow-hidden bg-gradient-to-br from-card via-card to-secondary border-border/50 hover:border-primary/50 transition-all duration-500 cursor-pointer"
+                onClick={() => navigate('/catalog')}
+              >
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-purple-500/5 to-primary/10" />
                 </div>
-                <CardHeader>
-                  <div className="flex items-start justify-between gap-2">
-                    <CardTitle className="text-lg">{mod.title}</CardTitle>
-                    <div className="flex items-center gap-1 text-sm">
-                      <Icon name="Star" size={16} className="fill-primary text-primary" />
-                      <span>{mod.rating}</span>
+                <CardContent className="p-0 relative">
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={mod.image}
+                      alt={mod.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
+                    <div className="absolute top-3 left-3">
+                      <Badge className="bg-background/80 backdrop-blur-sm text-foreground border-border">
+                        NewEra
+                      </Badge>
                     </div>
                   </div>
-                  <CardDescription>{mod.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <Badge variant="outline">{mod.category}</Badge>
-                    <Badge variant="outline">{mod.game}</Badge>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Avatar className="h-6 w-6">
-                      <AvatarFallback>{mod.author[0]}</AvatarFallback>
-                    </Avatar>
-                    <span>{mod.author}</span>
-                    <span>•</span>
-                    <div className="flex items-center gap-1">
-                      <Icon name="Download" size={14} />
-                      <span>{mod.downloads.toLocaleString()}</span>
-                    </div>
+                  <div className="p-6 relative z-10">
+                    <h3 className="text-xl font-bold mb-2">{mod.title}</h3>
+                    <p className="text-sm text-muted-foreground mb-4">{mod.description}</p>
+                    <Button className="w-full bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 rounded-xl font-semibold">
+                      {mod.buttonText}
+                    </Button>
                   </div>
                 </CardContent>
-                <CardFooter>
-                  <Button className="w-full gap-2">
-                    {mod.isPaid ? (
-                      <>
-                        <Icon name="ShoppingCart" size={16} />
-                        Купить
-                      </>
-                    ) : (
-                      <>
-                        <Icon name="Download" size={16} />
-                        Скачать
-                      </>
-                    )}
-                  </Button>
-                </CardFooter>
               </Card>
             ))}
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-border py-12 mt-20">
+      <footer className="border-t border-border/50 py-8 mt-16 bg-gradient-to-b from-background to-card">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Icon name="Zap" size={24} className="text-primary" />
-                <span className="font-bold text-lg">NewEra</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+                <Icon name="User" size={20} className="text-white" />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Маркетплейс модификаций для Grand Theft Auto нового поколения
-              </p>
+              <div>
+                <p className="text-sm font-semibold">Петрунников Родион</p>
+                <p className="text-xs text-muted-foreground">Администратор NewEra</p>
+              </div>
             </div>
-            <div>
-              <h3 className="font-semibold mb-3">Каталог</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Все моды</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Платные</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Бесплатные</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Популярные</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-3">Сообщество</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">Стена</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Обсуждения</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Авторы</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Поддержка</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-3">О платформе</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-foreground transition-colors">О нас</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Правила</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Условия использования</a></li>
-                <li><a href="#" className="hover:text-foreground transition-colors">Контакты</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            © 2024 NewEra. Все права защищены.
+            <p className="text-sm text-muted-foreground">
+              © 2024 NewEra. Все права защищены
+            </p>
           </div>
         </div>
       </footer>
