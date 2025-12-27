@@ -1,9 +1,10 @@
-
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Catalog from "./pages/Catalog";
 import ModDetail from "./pages/ModDetail";
@@ -16,24 +17,36 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+const AuthInit = ({ children }: { children: React.ReactNode }) => {
+  const initAuth = useAuth((state) => state.initAuth);
+
+  useEffect(() => {
+    initAuth();
+  }, [initAuth]);
+
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/mod/:id" element={<ModDetail />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/discussions" element={<Discussions />} />
-          <Route path="/messages" element={<Messages />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthInit>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/catalog" element={<Catalog />} />
+            <Route path="/mod/:id" element={<ModDetail />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/discussions" element={<Discussions />} />
+            <Route path="/messages" element={<Messages />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthInit>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
