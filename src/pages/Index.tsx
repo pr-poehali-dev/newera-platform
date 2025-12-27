@@ -71,13 +71,13 @@ const Index = () => {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <a href="#collections" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
+            <a href="/collections" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
               Сборки
             </a>
-            <a href="#modifications" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
+            <a href="/modifications" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
               Модификации
             </a>
-            <a href="#fixes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
+            <a href="/fixes" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors" onMouseEnter={playHoverSound}>
               Фиксы
             </a>
           </nav>

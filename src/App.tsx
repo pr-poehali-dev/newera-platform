@@ -6,6 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import Index from "./pages/Index";
+import Collections from "./pages/Collections";
+import Modifications from "./pages/Modifications";
+import Fixes from "./pages/Fixes";
 import Catalog from "./pages/Catalog";
 import ModDetail from "./pages/ModDetail";
 import Profile from "./pages/Profile";
@@ -36,6 +39,9 @@ const App = () => (
         <AuthInit>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/collections" element={<Collections />} />
+            <Route path="/modifications" element={<Modifications />} />
+            <Route path="/fixes" element={<Fixes />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/mod/:id" element={<ModDetail />} />
             <Route path="/profile" element={<Profile />} />
